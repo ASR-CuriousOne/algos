@@ -1,6 +1,7 @@
 #pragma once
 #include <cassert>
 #include <cmath>
+#include <cstddef>
 #include <iomanip>
 #include <iostream>
 #include <iterator>
@@ -38,6 +39,17 @@ public:
       result.m_data[i] = m_data[i] + other.m_data[i];
 
     return result;
+  }
+
+  friend bool operator==(const Matrix<T> &lhs, const Matrix<T> &rhs) {
+    if (lhs.getDim() != rhs.getDim())
+      return false;
+
+    for (size_t i = 0; i < lhs.m_data.size(); ++i) {
+      if (lhs.m_data[i] != rhs.m_data[i])
+        return false;
+    }
+    return true;
   }
 
   Matrix operator*(const Matrix &other) {
@@ -120,6 +132,3 @@ public:
     }
   }
 };
-
-
-

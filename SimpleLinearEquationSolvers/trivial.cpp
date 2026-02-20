@@ -1,6 +1,9 @@
 #include "matrix.hpp"
 #include <cstddef>
-#include <exception>
+#include <filesystem>
+#include <fstream>
+#include <print>
+#include <span>
 #include <stdexcept>
 #include <utility>
 
@@ -42,7 +45,7 @@ public:
 
 using vec = ColumnVector<float>;
 
-vec calculateForLowerTriangular(const mat &A, const vec &b) {
+vec solveLowerTriangular(const mat &A, const vec &b) {
   assert(A.getDim().first == A.getDim().second &&
          A.getDim().second == b.getDim().first &&
          "Matrix vector size mismatch");
@@ -63,30 +66,113 @@ vec calculateForLowerTriangular(const mat &A, const vec &b) {
         xi -= A[i, j] * soln[j];
       }
     }
-		if(A[i,i] == 0){
-			throw std::runtime_error("Not invertible");
-		}
-		soln[i] = xi / A[i,i];
+    if (A[i, i] == 0) {
+      throw std::runtime_error("Not invertible");
+    }
+    soln[i] = xi / A[i, i];
   }
-	
-	return soln;
+
+  return soln;
+}
+
+vec solveUpperTriangular(const mat &A, const vec &b) {
+  assert(A.getDim().first == A.getDim().second &&
+         A.getDim().second == b.getDim().first &&
+         "Matrix vector size mismatch");
+
+  const size_t n = b.getDim().first;
+
+  vec soln(n);
+
+  for (long long i = n - 1; i >= 0; i--) {
+    float xi = 0;
+    for (long long j = n - 1; j >= 0; j--) {
+      if (j < i) {
+        if (A[i, j] != 0)
+          throw std::runtime_error("Not a Upper triangular matrix");
+      } else if (i == j) {
+        xi += b[i];
+      } else {
+        xi -= A[i, j] * soln[j];
+      }
+    }
+    if (A[i, i] == 0) {
+      throw std::runtime_error("Not invertible");
+    }
+    soln[i] = xi / A[i, i];
+  }
+
+  return soln;
+}
+
+mat readMatrixFromFile(const std::filesystem::path &filename) {
+  std::ifstream file(filename);
+  if (!file.is_open()) {
+    throw std::runtime_error("Could not open matrix file: " +
+                             filename.string());
+  }
+
+  size_t rows, cols;
+  if (!(file >> rows >> cols)) {
+    throw std::runtime_error("Failed to read matrix dimensions from " +
+                             filename.string());
+  }
+
+  mat M(rows, cols);
+  for (size_t i = 0; i < rows; ++i) {
+    for (size_t j = 0; j < cols; ++j) {
+      file >> M[i, j];
+    }
+  }
+  return M;
+}
+
+vec readVectorFromFile(const std::filesystem::path &filename) {
+  std::ifstream file(filename);
+  if (!file.is_open()) {
+    throw std::runtime_error("Could not open vector file: " +
+                             filename.string());
+  }
+
+  size_t size;
+  if (!(file >> size)) {
+    throw std::runtime_error("Failed to read vector size from " +
+                             filename.string());
+  }
+
+  vec v(size);
+  for (size_t i = 0; i < size; ++i) {
+    file >> v[i];
+  }
+  return v;
 }
 
 // L U
 
-int main() {
-	mat A(2,2);
+int main(int argc, char *argv[]) {
 
-	A[0,0] = 2;
-	A[1,0] = 1;
-	A[1,1] = 2;
+  std::span<char *> args(argv, argc);
+  if (args.size() < 2) {
+    std::println("Give matrix and vector files.\nUsage ./a.out <matrix> "
+                 "<vector> <solution[optional]>");
+  }
+  std::filesystem::path matrixFile(args[1]);
+  std::filesystem::path vectorFile(args[2]);
+  std::filesystem::path solutionFile;
 
-	vec b(2);
+  if (args.size() > 3)
+    solutionFile = std::filesystem::path(args[3]);
 
-	b[0] = 3;
-	b[1] = 4;
+  mat L = readMatrixFromFile(matrixFile);
+  mat b = readVectorFromFile(vectorFile);
 
-	vec ans = calculateForLowerTriangular(A,b);
+  vec ans = solveLowerTriangular(L, b);
 
-	ans.display();
+  if (!solutionFile.empty()) {
+    vec actualAns = readVectorFromFile(solutionFile);
+    std::cout << (ans == actualAns ? "Correct Solution" : "Wrong Solution")
+              << std::endl;
+  }
+
+  ans.display();
 }

@@ -48,7 +48,9 @@ int main() {
   }
 
   for (int i = 1; i < n + 1; i++) {
-    std::println("Vertex {} at distance {} from vertex {}", i, (distances[i] == INT_MAX ? "inf" : std::to_string(distances[i])),
-                 start);
+    std::println(
+        "Vertex {} at distance {} from vertex {}", i,
+        (distances[i] == INT_MAX ? "inf" : std::to_string(distances[i])),
+        start);
   }
 }
