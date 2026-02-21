@@ -41,6 +41,15 @@ public:
 
     return result;
   }
+  Matrix operator-(const Matrix &other) const {
+    assert(m_dim == other.m_dim);
+
+    Matrix<T> result(m_dim);
+    for (size_t i = 0; i < m_data.size(); i++)
+      result.m_data[i] = m_data[i] - other.m_data[i];
+
+    return result;
+  }
 
   friend bool operator==(const Matrix<T> &lhs, const Matrix<T> &rhs) {
     if (lhs.getDim() != rhs.getDim())
@@ -160,6 +169,16 @@ public:
     ColumnVector result(m_data.size());
     for (size_t i = 0; i < m_data.size(); ++i) {
       result[i] = m_data[i] + other.m_data[i];
+    }
+    return result;
+  }
+
+  ColumnVector operator-(const ColumnVector &other) const {
+    assert(m_data.size() == other.m_data.size() &&
+           "Vectors must be the same length");
+    ColumnVector result(m_data.size());
+    for (size_t i = 0; i < m_data.size(); ++i) {
+      result[i] = m_data[i] - other.m_data[i];
     }
     return result;
   }
