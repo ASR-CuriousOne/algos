@@ -1,3 +1,11 @@
 Algorithms implemented till now.
 
-NONE :(
+Some :)
+
+### Linear Equation Solvers
+- Forward Substitution
+- Backward Substitution
+
+### Miscellaneous
+- Dijkstras
+- GCD
