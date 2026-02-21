@@ -1,4 +1,9 @@
-Algorithms implemented till now.
+**Just some random data structures and algorithms I implemented.**
+
+## Data Structures.
+- Disjoint Set
+
+## Algorithms.
 
 Some :)
 
