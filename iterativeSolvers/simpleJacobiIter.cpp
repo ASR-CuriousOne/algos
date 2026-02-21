@@ -9,10 +9,6 @@ Vec solveJacobiIter(const Mat &A, const Vec &b, int numberOfIters) {
   Vec ans(b.getDim().first);
   Mat DInv(A.getDim()), LPlusU(A.getDim());
 
-  for (size_t i = 0; i < ans.getDim().first; i++) {
-    ans[i] = 1;
-  }
-
   for (size_t i = 0; i < A.getDim().first; i++) {
     for (size_t j = 0; j < A.getDim().second; j++) {
       if (i == j)
@@ -48,12 +44,12 @@ int main(int argc, char *argv[]) {
   if (args.size() > 4)
     solutionFile = std::filesystem::path(args[4]);
 
-  auto L_result = readMatrixFromFile(matrixFile);
-  if (!L_result) {
-    std::println(stderr, "Error: {}", L_result.error());
+  auto A_result = readMatrixFromFile(matrixFile);
+  if (!A_result) {
+    std::println(stderr, "Error: {}", A_result.error());
     return 1;
   }
-  Mat L = L_result.value();
+  Mat A = A_result.value();
 
   auto b_result = readVectorFromFile(vectorFile);
   if (!b_result) {
@@ -61,8 +57,12 @@ int main(int argc, char *argv[]) {
     return 1;
   }
   Vec b = b_result.value();
+	A.display();
+	std::cout << std::endl;
 
-  Vec ans = solveJacobiIter(L, b, numberOfIters);
+	b.display();
+	std::cout << std::endl;
+  Vec ans = solveJacobiIter(A, b, numberOfIters);
 
   if (!solutionFile.empty()) {
     auto ans_result = readVectorFromFile(solutionFile);
