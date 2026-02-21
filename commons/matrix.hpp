@@ -4,9 +4,10 @@
 #include <cstddef>
 #include <iomanip>
 #include <iostream>
-#include <iterator>
-#include <queue>
+#include <utility>
 #include <vector>
+
+template <typename T> class ColumnVector;
 
 template <typename T> class Matrix {
 private:
@@ -14,10 +15,10 @@ private:
   std::vector<T> m_data;
 
 public:
-  Matrix(size_t n, size_t m) : m_dim({n, m}), m_data(n * m, 0) {};
+  Matrix(size_t n, size_t m) : m_dim({n, m}), m_data(n * m, 0) {}
 
   Matrix(std::pair<size_t, size_t> dim)
-      : m_dim(dim), m_data(dim.first * dim.second, 0) {};
+      : m_dim(dim), m_data(dim.first * dim.second, 0) {}
 
   std::pair<size_t, size_t> getDim() const { return m_dim; }
 
@@ -26,12 +27,12 @@ public:
     return m_data[i * m_dim.second + j];
   }
 
-  T operator[](size_t i, size_t j) const {
+  const T &operator[](size_t i, size_t j) const {
     assert(0 <= i && i < m_dim.first && 0 <= j && j < m_dim.second);
     return m_data[i * m_dim.second + j];
   }
 
-  Matrix operator+(const Matrix &other) {
+  Matrix operator+(const Matrix &other) const {
     assert(m_dim == other.m_dim);
 
     Matrix<T> result(m_dim);
@@ -52,7 +53,7 @@ public:
     return true;
   }
 
-  Matrix operator*(const Matrix &other) {
+  Matrix operator*(const Matrix &other) const {
     assert(m_dim.second == other.m_dim.first);
 
     Matrix<T> result(m_dim.first, other.m_dim.second);
@@ -132,3 +133,77 @@ public:
     }
   }
 };
+
+template <typename T> class ColumnVector {
+private:
+  std::vector<T> m_data;
+
+public:
+  ColumnVector() = default;
+  explicit ColumnVector(size_t n) : m_data(n, 0) {}
+
+  std::pair<size_t, size_t> getDim() const { return {m_data.size(), 1}; }
+
+  T &operator[](size_t i) {
+    assert(i < m_data.size());
+    return m_data[i];
+  }
+
+  const T &operator[](size_t i) const {
+    assert(i < m_data.size());
+    return m_data[i];
+  }
+
+  ColumnVector operator+(const ColumnVector &other) const {
+    assert(m_data.size() == other.m_data.size() &&
+           "Vectors must be the same length");
+    ColumnVector result(m_data.size());
+    for (size_t i = 0; i < m_data.size(); ++i) {
+      result[i] = m_data[i] + other.m_data[i];
+    }
+    return result;
+  }
+
+  friend bool operator==(const ColumnVector<T> &lhs,
+                         const ColumnVector<T> &rhs) {
+    return lhs.m_data == rhs.m_data;
+  }
+
+  T operator*(const ColumnVector<T> &other) const {
+    assert(m_data.size() == other.m_data.size() &&
+           "Vectors must be the same length");
+    T dotProduct = 0;
+    for (size_t i = 0; i < m_data.size(); ++i) {
+      dotProduct += m_data[i] * other.m_data[i];
+    }
+    return dotProduct;
+  }
+
+  void display() const {
+    for (size_t i = 0; i < m_data.size(); i++) {
+      std::cout << "[ " << std::left << std::setw(5) << m_data[i] << "]"
+                << std::endl;
+    }
+  }
+};
+
+template <typename T>
+ColumnVector<T> operator*(const Matrix<T> &mat, const ColumnVector<T> &vec) {
+  assert(mat.getDim().second == vec.getDim().first &&
+         "Matrix columns must equal Vector rows");
+
+  size_t rows = mat.getDim().first;
+  size_t cols = mat.getDim().second;
+
+  ColumnVector<T> result(rows);
+  for (size_t i = 0; i < rows; ++i) {
+    result[i] = 0;
+    for (size_t j = 0; j < cols; ++j) {
+      result[i] += mat[i, j] * vec[j];
+    }
+  }
+  return result;
+}
+
+using Mat = Matrix<float>;
+using Vec = ColumnVector<float>;
