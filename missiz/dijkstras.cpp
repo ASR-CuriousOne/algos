@@ -6,12 +6,26 @@
 #include <string>
 #include <vector>
 
+struct Edge {
+  int to;
+  int weight;
+};
+
+struct QueueNode {
+  int dist;
+  int node;
+
+  bool operator>(const QueueNode &other) const { return dist > other.dist; }
+};
+
+constexpr int INF = std::numeric_limits<int>::max();
+
 int main() {
   int n, e;
 
   std::cin >> n >> e;
 
-  std::vector<std::vector<std::pair<int, int>>> adjList(n + 1);
+  std::vector<std::vector<Edge>> adjList(n + 1);
 
   for (int i = 0; i < e; i++) {
     int u, v, w;
@@ -22,8 +36,7 @@ int main() {
     adjList[v].push_back({u, w});
   }
 
-  std::priority_queue<std::pair<int, int>, std::vector<std::pair<int, int>>,
-                      std::greater<std::pair<int, int>>>
+  std::priority_queue<QueueNode, std::vector<QueueNode>, std::greater<>>
       minHeap;
   std::vector<int> distances(n + 1, INT_MAX);
 
@@ -37,20 +50,24 @@ int main() {
   while (!minHeap.empty()) {
     auto [dist, curr] = minHeap.top();
     minHeap.pop();
+
     if (dist > distances[curr])
       continue;
-    for (auto [neighbour, weight] : adjList[curr]) {
-      if (distances[neighbour] > dist + weight) {
-        distances[neighbour] = dist + weight;
-        minHeap.push({distances[neighbour], neighbour});
+
+    for (const auto &edge : adjList[curr]) {
+      if (distances[edge.to] > dist + edge.weight) {
+        distances[edge.to] = dist + edge.weight;
+        minHeap.push({distances[edge.to], edge.to});
       }
     }
   }
 
-  for (int i = 1; i < n + 1; i++) {
-    std::println(
-        "Vertex {} at distance {} from vertex {}", i,
-        (distances[i] == INT_MAX ? "inf" : std::to_string(distances[i])),
-        start);
+  for (int i = 1; i <= n; i++) {
+    if (distances[i] == INF) {
+      std::println("Vertex {} at distance inf from vertex {}", i, start);
+    } else {
+      std::println("Vertex {} at distance {} from vertex {}", i, distances[i],
+                   start);
+    }
   }
 }

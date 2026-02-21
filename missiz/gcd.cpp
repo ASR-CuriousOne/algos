@@ -1,23 +1,32 @@
 #include <iostream>
+#include <print>
 using ll = long long;
 
-ll gcdExtended(ll a, ll b, ll& x, ll& y) {
-  if (a == 0){
-    x = 0; y = 1;
-    return b;
+struct GcdResult {
+  ll gcd;
+  ll x;
+  ll y;
+};
+
+GcdResult gcdExtended(ll a, ll b) {
+  if (a == 0) {
+    return {b, 0, 1};
   }
-  ll x1,y1;
 
-  ll gcd = gcdExtended(b % a, a,x1,y1);
+  auto [gcd, x1, y1] = gcdExtended(b % a, a);
 
-  x = y1 - (b/a)*x1;
-  y = x1;
-  return gcd;
+  ll x = y1 - (b / a) * x1;
+  ll y = x1;
+
+  return {gcd, x, y};
 }
 
 int main() {
-  ll a, b,x,y;
-  std::cin >> a >> b;
-  std::cout << gcdExtended(a, b,x,y) << '\n';
-  std::cout << x << ' ' << y << '\n';
+  ll a, b;
+  if (std::cin >> a >> b) {
+    auto [gcd, x, y] = gcdExtended(a, b);
+
+    std::println("{}", gcd);
+    std::println("{} {}", x, y);
+  }
 }
