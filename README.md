@@ -4,6 +4,7 @@ Some :)
 
 ### Iterative Solvers
 - Jacobi Iteration
+- Gauss Sidel
 
 ### Linear Equation Solvers
 - Forward Substitution
