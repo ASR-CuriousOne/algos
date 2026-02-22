@@ -2,6 +2,7 @@
 
 ## Data Structures.
 - Disjoint Set
+- Fenwick Tree
 
 ## Algorithms.
 
