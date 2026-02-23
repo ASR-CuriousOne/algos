@@ -20,4 +20,5 @@ Some :)
 ### Miscellaneous
 - Dijkstras
 - GCD
-- Kruskals
+- Kruskals Minimum Spanning Tree
+- Gale Shapley Stable Matching
