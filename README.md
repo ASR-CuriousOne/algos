@@ -19,3 +19,4 @@ Some :)
 ### Miscellaneous
 - Dijkstras
 - GCD
+- Kruskals
