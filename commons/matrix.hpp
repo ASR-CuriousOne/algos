@@ -141,6 +141,17 @@ public:
       std::cout << "]" << std::endl;
     }
   }
+
+  void transposeInPlace() {
+    assert(m_dim.first == m_dim.second &&
+           "In-place transpose requires a square matrix");
+
+    for (size_t i = 0; i < m_dim.first; ++i) {
+      for (size_t j = i + 1; j < m_dim.second; ++j) {
+        std::swap((*this)[i, j], (*this)[j, i]);
+      }
+    }
+  }
 };
 
 template <typename T> class ColumnVector {

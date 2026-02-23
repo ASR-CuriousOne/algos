@@ -15,6 +15,7 @@ Some :)
 ### Linear Equation Solvers
 - Forward Substitution
 - Backward Substitution
+- Cholesky Decompositon
 
 ### Miscellaneous
 - Dijkstras
