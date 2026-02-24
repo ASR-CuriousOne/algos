@@ -22,3 +22,7 @@ Some :)
 - GCD
 - Kruskals Minimum Spanning Tree
 - Gale Shapley Stable Matching
+- Sorting
+    - Bubble Sort
+    - Merge Sort
+
