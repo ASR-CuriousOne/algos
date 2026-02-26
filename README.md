@@ -3,6 +3,8 @@
 ## Data Structures.
 - Disjoint Set
 - Fenwick Tree
+- Linked Lists
+    - Singly Linked List
 
 ## Algorithms.
 
