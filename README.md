@@ -10,6 +10,9 @@
 
 Some :)
 
+### Automaton
+- Determinstic Finite Automaton
+
 ### Iterative Solvers
 - Jacobi Iteration
 - Gauss Sidel
