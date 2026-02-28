@@ -13,6 +13,9 @@ Some :)
 ### Automaton
 - Determinstic Finite Automaton
 
+### Caching
+- Belady's Optimal Page Replacement
+
 ### Iterative Solvers
 - Jacobi Iteration
 - Gauss Sidel
