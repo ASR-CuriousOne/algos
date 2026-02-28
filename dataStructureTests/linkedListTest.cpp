@@ -23,4 +23,7 @@ int main() {
   list.insert(temp, pos);
 
 	list.printList();
+
+	list.reverse();
+	list.printList();
 }

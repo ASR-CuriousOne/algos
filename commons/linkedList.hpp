@@ -54,12 +54,29 @@ public:
     }
   }
 
+  void reverse() {
+    Node<T> *prev = nullptr;
+    Node<T> *curr = head;
+    Node<T> *next = head->next;
+
+    while (next != nullptr) {
+      curr->next = prev;
+      prev = curr;
+      curr = next;
+      next = next->next;
+    }
+
+		curr->next = prev;
+
+		head = curr;
+  }
+
   void printList() {
     Node<T> *temp = head;
     for (; temp != nullptr; temp = temp->next) {
-      std::print("{} ", temp->value);
+      std::println("v:{} n: {}", temp->value, static_cast<void*>(temp->next));
     }
 
-		std::println();
+    std::println();
   }
 };
