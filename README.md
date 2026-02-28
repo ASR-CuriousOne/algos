@@ -5,6 +5,7 @@
 - Fenwick Tree
 - Linked Lists
     - Singly Linked List
+- LRU
 
 ## Algorithms.
 
@@ -15,6 +16,7 @@ Some :)
 
 ### Caching
 - Belady's Optimal Page Replacement
+- LRU Cache
 
 ### Iterative Solvers
 - Jacobi Iteration
