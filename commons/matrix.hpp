@@ -133,13 +133,27 @@ public:
   }
 
   void display() const {
+    std::ios_base::fmtflags oldFlags = std::cout.flags();
+    std::streamsize oldPrec = std::cout.precision();
+
+    std::cout << std::fixed << std::setprecision(2);
+
     for (size_t i = 0; i < m_dim.first; i++) {
-      std::cout << "[ ";
+      std::cout << "[";
       for (size_t j = 0; j < m_dim.second; j++) {
-        std::cout << std::left << std::setw(5) << (*this)[i, j];
+        float val = (*this)[i, j];
+
+        if (std::abs(val) < 1e-5f) {
+          val = 0.00f;
+        }
+
+        std::cout << std::right << std::setw(8) << val;
       }
-      std::cout << "]" << std::endl;
+      std::cout << " ]\n"; 
     }
+
+    std::cout.flags(oldFlags);
+    std::cout.precision(oldPrec);
   }
 
   void transposeInPlace() {
