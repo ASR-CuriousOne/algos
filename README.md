@@ -21,6 +21,7 @@ Some :)
 ### Iterative Solvers
 - Jacobi Iteration
 - Gauss Sidel
+- Jacobi Eigenvalue Solver
 
 ### Linear Equation Solvers
 - Forward Substitution
