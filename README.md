@@ -35,4 +35,5 @@ Some :)
 - Sorting
     - Bubble Sort
     - Merge Sort
+- Heap's Permutations Generation Algorithm
 
