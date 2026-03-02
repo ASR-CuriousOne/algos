@@ -14,6 +14,9 @@ Some :)
 ### Automaton
 - Determinstic Finite Automaton
 
+### Blockchain
+- Merkle Tree
+
 ### Caching
 - Belady's Optimal Page Replacement
 - LRU Cache
