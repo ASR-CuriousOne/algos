@@ -33,6 +33,8 @@ Some :)
 
 ### Miscellaneous
 - Dijkstras
+- Floyd Marshall
+- Bellman Ford
 - GCD
 - Kruskals Minimum Spanning Tree
 - Gale Shapley Stable Matching
