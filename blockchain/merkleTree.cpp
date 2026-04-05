@@ -83,7 +83,6 @@ int main() {
       "Tx1: Alice pays Bob 5 BTC", "Tx2: Bob pays Charlie 2 BTC",
       "Tx3: Charlie pays Dave 1 BTC", "Tx4: Dave pays Eve 0.5 BTC"};
 
-  std::println("Building Merkle Tree...");
   MerkleTree tree(transactions);
 
   std::println();
