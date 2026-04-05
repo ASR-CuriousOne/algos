@@ -6,6 +6,7 @@
 - Linked Lists
     - Singly Linked List
 - LRU
+- Bloom Filter
 
 ## Algorithms.
 
