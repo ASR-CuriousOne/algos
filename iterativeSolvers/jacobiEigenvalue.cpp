@@ -1,5 +1,5 @@
-#include "matrix.hpp"
-#include "utils.hpp"
+#include "matrix/matrix.hpp"
+#include "matrix/utils.hpp"
 #include <climits>
 #include <cmath>
 #include <cstdlib>

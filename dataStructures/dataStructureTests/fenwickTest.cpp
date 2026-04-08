@@ -1,4 +1,4 @@
-#include "fenwickTree.hpp"
+#include "rangeQueries/fenwickTree.hpp"
 #include <print>
 
 int main() {
