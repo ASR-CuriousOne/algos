@@ -7,6 +7,7 @@
     - Singly Linked List
 - LRU
 - Bloom Filter
+- Trie('a' - 'z')
 
 ## Algorithms.
 
