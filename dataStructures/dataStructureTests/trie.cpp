@@ -2,11 +2,11 @@
 #include <cassert>
 #include <iostream>
 
-// Tests written by Gemini (should probably put in some efforts myself).
+// Tests written by Gemini :) (should write them myself though)
 int main() {
-    Trie trie;
+    Trie<char> trie;
 
-    std::cout << "Running Trie tests...\n";
+    std::cout << "Running GenericTrie<char> tests...\n";
 
     trie.insert("bat");
     trie.insert("bath");
@@ -55,9 +55,35 @@ int main() {
     assert(trie.hasWord("apple") == true);
     std::cout << "[PASS] Removal (Non-existent words)\n";
 
-    trie.insert("Cat");
-    assert(trie.hasWord("at") == true);
-    std::cout << "[PASS] Edge Cases (Invalid Chars Skipped)\n";
+    trie.insert("Cat!");
+    assert(trie.hasWord("Cat!") == true);
+    assert(trie.hasWord("cat!") == false);
+    assert(trie.hasWord("at") == false);
+    std::cout << "[PASS] Edge Cases (Case sensitivity and symbols handled "
+                 "correctly)\n";
+
+    std::cout << "\n-----------------------------------\n\n";
+
+    Trie<wchar_t> wideTrie;
+
+    std::cout << "Running GenericTrie<wchar_t> tests...\n";
+
+    wideTrie.insert(L"こんにちは");
+    wideTrie.insert(L"こん");
+
+    assert(wideTrie.hasWord(L"こんにちは") == true);
+    assert(wideTrie.hasWord(L"こん") == true);
+    assert(wideTrie.hasPrefix(L"こんに") == true);
+    assert(wideTrie.hasWord(L"さようなら") == false);
+    std::cout << "[PASS] Wide string (Unicode) Insertion and Search\n";
+
+    wideTrie.remove(L"こん");
+    assert(wideTrie.hasWord(L"こん") == false);
+    assert(wideTrie.hasPrefix(L"こん") == true);
+    assert(wideTrie.hasWord(L"こんにちは") == true);
+    std::cout << "[PASS] Wide string (Unicode) Removal\n";
+
+    std::cout << "\nAll Generic Trie tests passed successfully!\n";
 
     return 0;
 }

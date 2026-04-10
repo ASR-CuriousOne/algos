@@ -1,118 +1,86 @@
 #pragma once
-#include <array>
-#include <string>
+#include <memory>
+#include <string_view>
+#include <unordered_map>
 
-struct TrieNode {
-    std::array<TrieNode *, 26> children;
-    char letter;
-    bool isEndOfWord = false;
+template <typename CharT = char> class Trie {
+  private:
+    struct TrieNode {
+        std::unordered_map<CharT, std::unique_ptr<TrieNode>> children;
+        bool isEndOfWord = false;
+    };
 
-    TrieNode() : children{nullptr}, letter(0) {}
-    TrieNode(char _letter) : children(), letter(_letter), isEndOfWord(false) {}
-    TrieNode(char _letter, bool _isEndOfWord)
-        : children(), letter(_letter), isEndOfWord(_isEndOfWord) {}
+    std::unique_ptr<TrieNode> m_root;
 
-    ~TrieNode() {
-        for (auto c : children) {
-            if (c)
-                delete c;
-        }
-    }
-};
-
-class Trie {
-    const int wordEndCharIndex = 26;
-    TrieNode *root;
-
-    bool hasNoChildren(const TrieNode *node) {
-        for (auto child : node->children) {
-            if (child != nullptr)
-                return false;
-        }
-        return true;
-    }
-
-    bool removeRecurse(TrieNode *curr, const std::string &word, int depth) {
-        if (curr == nullptr) {
+    bool removeRecurse(TrieNode *curr, std::basic_string_view<CharT> word,
+                       size_t depth) {
+        if (!curr)
             return false;
-        }
 
         if (depth == word.size()) {
-            if (!curr->isEndOfWord) {
+            if (!curr->isEndOfWord)
                 return false;
-            }
-
             curr->isEndOfWord = false;
-
-            return hasNoChildren(curr);
+            return curr->children.empty();
         }
 
-        char l = word[depth];
+        CharT c = word[depth];
+        auto it = curr->children.find(c);
 
-        if (!std::islower(l))
-            return false;
-
-        int index = l - 'a';
-
-        bool canBeDeleted =
-            removeRecurse(curr->children[index], word, depth + 1);
-
-        if (canBeDeleted) {
-            delete curr->children[index];
-
-            curr->children[index] = nullptr;
-
-            return !curr->isEndOfWord && hasNoChildren(curr);
+        if (it != curr->children.end()) {
+            bool canBeDeleted =
+                removeRecurse(it->second.get(), word, depth + 1);
+            if (canBeDeleted) {
+                curr->children.erase(it);
+                return !curr->isEndOfWord && curr->children.empty();
+            }
         }
+
         return false;
     }
 
   public:
-    Trie() { root = new TrieNode(); }
-    Trie(const Trie &) = delete;
-    Trie &operator=(const Trie &) = delete;
+    Trie() : m_root(std::make_unique<TrieNode>()) {}
 
-    void insert(const std::string &word) {
-        TrieNode *curr = root;
-        for (auto l : word) {
-            if (!std::islower(l))
-                continue;
-            if (curr->children[l - 'a'] == nullptr) {
-                curr->children[l - 'a'] = new TrieNode(l);
+    void insert(std::basic_string_view<CharT> word) {
+        TrieNode *curr = m_root.get();
+
+        for (CharT c : word) {
+            if (curr->children.find(c) == curr->children.end()) {
+                curr->children[c] = std::make_unique<TrieNode>();
             }
-            curr = curr->children[l - 'a'];
+            curr = curr->children[c].get();
         }
 
         curr->isEndOfWord = true;
     }
 
-    void remove(const std::string &word) { removeRecurse(root, word, 0); }
+    void remove(std::basic_string_view<CharT> word) {
+        removeRecurse(m_root.get(), word, 0);
+    }
 
-    bool hasWord(const std::string &word) {
-        TrieNode *curr = root;
+    bool hasWord(std::basic_string_view<CharT> word) {
+        TrieNode *curr = m_root.get();
 
-        for (auto l : word) {
-            if (curr->children[l - 'a'] == nullptr) {
+        for (CharT c : word) {
+            auto it = curr->children.find(c);
+            if (it == curr->children.end())
                 return false;
-            }
-            curr = curr->children[l - 'a'];
+            curr = it->second.get();
         }
 
         return curr->isEndOfWord;
     }
 
-    bool hasPrefix(const std::string &prefix) {
-        TrieNode *curr = root;
-
-        for (auto l : prefix) {
-            if (curr->children[l - 'a'] == nullptr) {
+    bool hasPrefix(std::basic_string_view<CharT> prefix) const {
+        TrieNode *curr = m_root.get();
+        for (CharT c : prefix) {
+            auto it = curr->children.find(c);
+            if (it == curr->children.end()) {
                 return false;
             }
-            curr = curr->children[l - 'a'];
+            curr = it->second.get();
         }
-
         return true;
     }
-
-    ~Trie() { delete root; }
 };
