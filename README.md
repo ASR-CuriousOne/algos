@@ -7,7 +7,7 @@
     - Singly Linked List
 - LRU
 - Bloom Filter
-- Trie('a' - 'z')
+- Trie
 
 ## Algorithms.
 
@@ -22,6 +22,9 @@ Some :)
 ### Caching
 - Belady's Optimal Page Replacement
 - LRU Cache
+
+### Differential Solvers
+- Runge Kutta
 
 ### Iterative Solvers
 - Jacobi Iteration
