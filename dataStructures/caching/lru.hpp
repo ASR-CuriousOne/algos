@@ -40,10 +40,10 @@ template <typename Key, typename Value> class LRU {
         }
 
         if (m_cacheMap.size() == m_capacity) {
-            int lru_key = m_cacheList.back().first;
+            Key lruKey = m_cacheList.back().first;
 
             m_cacheList.pop_back();
-            m_cacheMap.erase(lru_key);
+            m_cacheMap.erase(lruKey);
         }
 
         m_cacheList.push_front({key, value});
